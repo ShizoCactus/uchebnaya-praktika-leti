@@ -2,7 +2,11 @@ import exceptions.NoSuchCourseException
 import exceptions.NoSuchStudentException
 import java.io.File
 
-class Solution {
+class Solution(
+    listVarientsFileName: String,
+    averageScoresFileName: String,
+    studentChoicesFileName: String
+) {
     private val ABS_URL = "C:\\Users\\iliah\\IdeaProjects\\untitled\\data"
     val courses = mutableListOf<Course>()
     val scores = mutableMapOf<String, List<Double>>()
@@ -12,9 +16,9 @@ class Solution {
     var firstConflictedStudent: Student? = null
 
     init {
-        File("$ABS_URL\\Список вариантов.txt").forEachLine { addStringAsCourseInfo(it) }
-        File("$ABS_URL\\Средние баллы.txt").forEachLine { addStringAsScoreInfo(it) }
-        File("$ABS_URL\\Выбор ДВС 3 курс 6 семестр.txt").forEachLine { addStringAsStudentInfo(it) }
+        File("$listVarientsFileName.txt").forEachLine { addStringAsCourseInfo(it) }
+        File("$averageScoresFileName.txt").forEachLine { addStringAsScoreInfo(it) }
+        File("$studentChoicesFileName.txt").forEachLine { addStringAsStudentInfo(it) }
     }
 
     private fun addStringAsCourseInfo(string: String){

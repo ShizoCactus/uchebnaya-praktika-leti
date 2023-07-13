@@ -101,23 +101,63 @@ class Solution {
         }
     }
 
-    private fun printDistribution(){
+    private fun getDistributionInfo(): String{
+        var str = ""
         for (course in courses) {
-            println("Курс $course заполнен на ${course.getOccupancy()}%")
-            println("На курсе будут учиться:")
+            str += "Курс $course заполнен на ${course.getOccupancy()}%\n"
+            str += "На курсе будут учиться:\n"
             for (student in course.students)
-                println("\t" + student)
-            println()
+                str += "\t" + student
+            str += "\n\n"
         }
+        return str
+    }
+
+    private fun getConflictInfo(): String{
+        var str = ""
+        for (conflict in conflicts){
+            str += "Направлении ${conflict.courseName} переполнено, потому что есть ${conflict.students.size} студентов с одинаковыми баллами\n"
+            for (student in conflict.students)
+                str += "\t" + student
+            str += "\n"
+        }
+        return str
+    }
+
+    private fun getFirstConflictedStudentInfo(): String{
+        var str = ""
+        str = if (firstConflictedStudent == null)
+            "Проблем нет"
+        else
+            "Первый студент, расширивший направление - $firstConflictedStudent"
+        return str
+    }
+
+    private fun printDistribution(){
+        println(getDistributionInfo())
     }
 
     private fun printConflictInfo(){
-        for (conflict in conflicts){
-            println("Направлении ${conflict.courseName} переполнено, потому что есть ${conflict.students.size} студентов с одинаковыми баллами")
-            for (student in conflict.students)
-                println("\t" + student)
-            println()
-        }
+        println(getConflictInfo())
+    }
+
+    private fun printFirstConflictedStudentInfo(){
+        println(getFirstConflictedStudentInfo())
+    }
+
+    private fun saveDistribution(){
+        val file = File("distribution.txt")
+        file.writeText(getDistributionInfo(), charset = Charsets.UTF_8)
+    }
+
+    private fun saveConflictInfo(){
+        val file = File("conflict_info.txt")
+        file.writeText(getConflictInfo(), charset = Charsets.UTF_8)
+    }
+
+    private fun saveFirstConflictedStudentInfo(){
+        val file = File("first_conflicted_student.txt")
+        file.writeText(getFirstConflictedStudentInfo(), charset = Charsets.UTF_8)
     }
 
     private fun printResult(){
@@ -125,15 +165,19 @@ class Solution {
         println()
         printConflictInfo()
         println()
-        if (firstConflictedStudent == null)
-            println("Проблем нет")
-        else
-            println("Первый студент, расширивший направление - $firstConflictedStudent")
+        printFirstConflictedStudentInfo()
+    }
+
+    private fun saveResult(){
+        saveDistribution()
+        saveConflictInfo()
+        saveFirstConflictedStudentInfo()
     }
 
     fun solve(){
         distributeStudents()
         collectConflictInfo()
         printResult()
+        saveResult()
     }
 }
